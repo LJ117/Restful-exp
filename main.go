@@ -8,9 +8,9 @@ import (
 )
 
 type Customer struct {
-	Name    string
-	City    string
-	ZipCode string
+	Name    string `json:"full_name"`
+	City    string `json:"city"`
+	ZipCode string `json:"zip_code"`
 }
 
 func main() {
@@ -18,18 +18,23 @@ func main() {
 	http.HandleFunc("/greet", greet)
 	http.HandleFunc("/customers", getAllCustomers)
 
-	http.ListenAndServe("localhost:8888", nil)
+	log.Fatal(http.ListenAndServe("localhost:8888", nil))
 }
 
 func greet(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprint(w, "Hello World !!!")
+	fprint, err := fmt.Fprint(w, "Hello World !!!")
+	if err != nil {
+		log.Printf("total %d bytes\n", fprint)
+		return
+	}
 }
 
 func getAllCustomers(w http.ResponseWriter, r *http.Request) {
 	customers := []Customer{
 		{"Seven", "CDC", "610061"},
-		{"Reaka", "GD", "710071"},
+		{"Bill", "GD", "710071"},
 	}
+	w.Header().Set("Content-Type", "Application/json")
 	if err := json.NewEncoder(w).Encode(customers); err != nil {
 		log.Fatal(err)
 	}
