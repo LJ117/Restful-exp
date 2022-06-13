@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 )
@@ -21,7 +22,10 @@ func greet(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 }
-
+func getCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	fmt.Fprint(w, vars["customer_id"])
+}
 func getAllCustomers(w http.ResponseWriter, r *http.Request) {
 	customers := []Customer{
 		{"Seven", "CDC", "610061"},
@@ -39,4 +43,8 @@ func getAllCustomers(w http.ResponseWriter, r *http.Request) {
 			log.Fatal(err)
 		}
 	}
+}
+
+func createCustomer(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "POST request")
 }
